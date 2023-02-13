@@ -15,8 +15,8 @@ if [[ ! -d $INIT_DIR ]]; then
 fi
 
 # Validate that there is a GStreamer registry to override
-if [[ ! -f $GST_REGISTRY_1_0 ]]; then
-  echo "$GST_REGISTRY_1_0 is missing - Aborting"
+if [[ -z $GST_REGISTRY_1_0 ]] || [[ ! -f $GST_REGISTRY_1_0 ]]; then
+  echo 'Could not locate GStreamer registry on this environment - Aborting'
   exit 1
 fi
 
