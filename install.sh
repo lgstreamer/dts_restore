@@ -1,11 +1,31 @@
-#!/bin/bash
-
+#!/usr/bin/env sh
 # DTS playback restoration script for LG OLED CX
 # Copyright (c) 2022-2023 Pete Batard <pete@akeo.ie>
 # See https://github.com/RootMyTV/RootMyTV.github.io/issues/72#issuecomment-1343204028
 
-# Set the following to the directory where you have the GST plugins
-GST_SRC=/home/root/gst
+# Get the path where the script is located.
+# Adapted from https://github.com/rmyorston/busybox-w32/issues/154
+LAST_COMMAND="$_"  # IMPORTANT: This must be the first command in the script
+ps_output="$(ps -o pid,comm | grep -Fw $$)"
+for cs in $ps_output; do
+  CURRENT_SHELL=$cs
+done;
+if [[ -n "$BASH_SOURCE" ]]; then
+  SCRIPT="${BASH_SOURCE[0]}"
+elif [[ "$0" != "$CURRENT_SHELL" ]] && [[ "$0" != "-$CURRENT_SHELL" ]]; then
+  SCRIPT="$0"
+elif [[ -n "$LAST_COMMAND" ]]; then
+  SCRIPT="$LAST_COMMAND"
+else
+  echo "Could not get script path - Aborting";
+  exit 1
+fi;
+
+SCRIPT=$(realpath "$SCRIPT" 2>&-)
+SCRIPT_DIR=$(dirname "$SCRIPT")
+
+# Set the directory where the GST plugins are located
+GST_SRC=$SCRIPT_DIR/gst
 
 # Validate that we have the relevant init.d directory
 INIT_DIR=/var/lib/webosbrew/init.d
@@ -15,8 +35,12 @@ if [[ ! -d $INIT_DIR ]]; then
 fi
 
 # Validate that there is a GStreamer registry to override
-if [[ -z $GST_REGISTRY_1_0 ]] || [[ ! -f $GST_REGISTRY_1_0 ]]; then
-  echo 'Could not locate GStreamer registry on this environment - Aborting'
+if [[ -z "$GST_REGISTRY_1_0" ]] || [[ ! -f "$GST_REGISTRY_1_0" ]]; then
+  echo "Could not locate the GStreamer registry on this environment - Aborting"
+  echo
+  echo "If needed, please make sure that you use an ssh session and not a"
+  echo "telnet session when running this installer, as telnet is missing the"
+  echo "required environmental variables and is known to cause this issue..."
   exit 1
 fi
 
@@ -63,10 +87,9 @@ if [[ "$GST_VERSION" != "1.14.4" || "${WEBOS_VERSION::1}" != "5" || "${MODEL_NAM
   esac
 fi
 
-echo "Installing $INIT_DIR/restore_dts"
-
-# The script must *NOT* have a .sh extension
-cat <<EOS > $INIT_DIR/restore_dts
+# Create the init script
+echo "Creating $SCRIPT_DIR/init_dts.sh"
+cat <<EOS > $SCRIPT_DIR/init_dts.sh
 #!/bin/bash
 
 # Override the GST plugins that were nerfed by LG
@@ -105,10 +128,15 @@ EOT
   fi
 fi
 EOS
+chmod 755 $SCRIPT_DIR/init_dts.sh
 
-chmod 755 $INIT_DIR/restore_dts
+# Install/link the init script into the webosbrew init directory
+echo "Creating $INIT_DIR/restore_dts symbolic link"
+# The $INIT_DIR script must *NOT* have a .sh extension
+ln -s $SCRIPT_DIR/init_dts.sh $INIT_DIR/restore_dts
+
 if [[ ! -f /tmp/gstcool.conf ]]; then
   echo "Running $INIT_DIR/restore_dts"
-  source $INIT_DIR/restore_dts
+  source $INIT_DIR/restore_dts || exit 1
   echo "DTS playback has been permanently re-enabled - Enjoy!"
 fi

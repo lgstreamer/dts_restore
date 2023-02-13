@@ -35,19 +35,21 @@ Limitations:
 Installation:
 -------------
 
-- Open a root shell to your TV (e.g. using ssh)
-- Download, extract and run the installer by issuing:
-  cd /home/root
-  wget https://github.com/lgstreamer/dts_restore/releases/download/1.0/dts_restore_1.0.tgz
-  tar -xzvf dts_restore_1.0.tgz
-  ./dts_install.sh
+- Open a root shell to your TV *using ssh* (not telnet!)
+- Download, extract and run the installer by issuing something like:
+  cd ~
+  wget https://github.com/lgstreamer/dts_restore/archive/refs/tags/1.1.tar.gz
+  tar -xzvf 1.1.tar.gz
+  ./dts_restore-1.1/install.sh
 
 
 Uninstallation:
 ---------------
 
-- Open a root shell to your TV (e.g. using ssh)
-- Run the command: ./home/root/dts_uninstall.sh
+- Open a root shell to your TV
+- Run the commands:
+  cd ~
+  ./dts_restore-1.1/uninstall.sh
 - Fully power off or reboot your TV.
 
 
@@ -58,7 +60,7 @@ Additional notes:
   content. All changes are applied in a temporary manner which means that,
   should you want reset media playback to its original behaviour, you can
   just remove the /var/lib/webosbrew/init.d/restore_dts init script or run
-  dst_uninstall.sh.
+  uninstall.sh.
 - If you still see the "This video does not support audio" message on first
   attempt, just close the video file and try again.
 - If you want to adjust the stereo downmix settings, you can edit the
