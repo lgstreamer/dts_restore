@@ -38,9 +38,9 @@ Installation:
 - Open a root shell to your TV *using ssh* (not telnet!)
 - Download, extract and run the installer by issuing something like:
   cd ~
-  wget https://github.com/lgstreamer/dts_restore/archive/refs/tags/1.1.tar.gz
-  tar -xzvf 1.1.tar.gz
-  ./dts_restore-1.1/install.sh
+  wget https://github.com/lgstreamer/dts_restore/archive/refs/tags/1.2.tar.gz
+  tar -xzvf 1.2.tar.gz
+  ./dts_restore-1.2/install.sh
 
 
 Uninstallation:
@@ -49,7 +49,7 @@ Uninstallation:
 - Open a root shell to your TV
 - Run the commands:
   cd ~
-  ./dts_restore-1.1/uninstall.sh
+  ./dts_restore-1.2/uninstall.sh
 - Fully power off or reboot your TV.
 
 

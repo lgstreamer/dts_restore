@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 # DTS playback restoration script for LG OLED CX
-# Copyright (c) 2022-2023 Pete Batard <pete@akeo.ie>
+# Copyright (c) 2022-2024 Pete Batard <pete@akeo.ie>
 # See https://github.com/RootMyTV/RootMyTV.github.io/issues/72#issuecomment-1343204028
 
 # Get the path where the script is located.
@@ -70,9 +70,9 @@ if [[ "$GST_VERSION" != "1.14.4" || "${WEBOS_VERSION::1}" != "5" || "${MODEL_NAM
   echo "$MODEL_NAME TV with webOS $WEBOS_VERSION and GStreamer $GST_VERSION."
   echo
   echo "While installing this software on an incompatible platform should not"
-  echo "cause irreversible damage, if you choose to proceed, you do acknowlegde"
+  echo "cause irreversible damage, if you choose to proceed, you do acknowledge"
   echo "that, because you are not using the relevant target system:"
-  echo "1. The software may not work as expected, it at all."
+  echo "1. The software may not work as expected, if at all."
   echo "2. You may lose existing features and/or functionality."
   echo "3. The entire responsibility for trying this software on an unsupported"
   echo "   platform lies entirely with you."
